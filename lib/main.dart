@@ -118,11 +118,15 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
       home: Scaffold(
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.menu),
-            tooltip: 'search bluetooth',
+            tooltip: '搜索蓝牙',
             onPressed: () async {
               await _bluetoothClassicPlugin.initPermissions();
               await _getDevices();
@@ -130,144 +134,102 @@ class _MyAppState extends State<MyApp> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => SelectDevices(
-                        devices: _devices, deviceAddress: getDeviceAddress)),
+                  builder: (context) => SelectDevices(
+                      devices: _devices, deviceAddress: getDeviceAddress),
+                ),
               );
             },
           ),
-          backgroundColor: Colors.blue,
-          title: const Text('喂鱼系统',
-              style: TextStyle(
-                color: Colors.white,
-              )),
+          title: const Text(
+            '喂鱼系统',
+            style: TextStyle(color: Colors.white),
+          ),
           actions: const [
             IconButton(
               icon: Icon(Icons.search),
-              tooltip: 'Search',
+              tooltip: '搜索',
               onPressed: null,
             ),
           ],
         ),
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              //const Expanded(child: Text("")),
-              Center(
-                child: Row(children: [
-                  Text(_currentDevice),
-                  const Text(":"),
-                  Text(_deviceStatusStr)
-                ]),
-              ),
-              Row(
-                children: [
-                  const Text("电机微调"),
-                  TextButton(
-                    onPressed: _deviceStatus == Device.connected
-                        ? () async {
-                            await _bluetoothClassicPlugin.write("l");
-                          }
-                        : null,
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.blue)),
-                    child: const Text("向左微调",
-                        style: TextStyle(color: Colors.white)),
-                  ),
-                  TextButton(
-                    onPressed: _deviceStatus == Device.connected
-                        ? () async {
-                            await _bluetoothClassicPlugin.write("r");
-                          }
-                        : null,
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.blue)),
-                    child: const Text("向右微调",
-                        style: TextStyle(color: Colors.white)),
-                  ),
-                ],
-              ),
-              TextButton(
-                onPressed: _deviceStatus == Device.connected
-                    ? () async {
-                        await _bluetoothClassicPlugin.write("e");
-                      }
-                    : null,
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.blue)),
-                child: const Text("喂食", style: TextStyle(color: Colors.white)),
-              ),
-              Column(
-                children: [
-                  const Text("喂食等级"),
-                  Row(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TextButton(
-                        onPressed: _deviceStatus == Device.connected
-                            ? () async {
-                                await _bluetoothClassicPlugin.write("1");
-                              }
-                            : null,
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.blue)),
-                        child: const Text("1",
-                            style: TextStyle(color: Colors.white)),
-                      ),
-                      TextButton(
-                        onPressed: _deviceStatus == Device.connected
-                            ? () async {
-                                await _bluetoothClassicPlugin.write("2");
-                              }
-                            : null,
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.blue)),
-                        child: const Text("2",
-                            style: TextStyle(color: Colors.white)),
-                      ),
-                      TextButton(
-                        onPressed: _deviceStatus == Device.connected
-                            ? () async {
-                                await _bluetoothClassicPlugin.write("3");
-                              }
-                            : null,
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.blue)),
-                        child: const Text("3",
-                            style: TextStyle(color: Colors.white)),
-                      ),
-                      TextButton(
-                        onPressed: _deviceStatus == Device.connected
-                            ? () async {
-                                await _bluetoothClassicPlugin.write("4");
-                              }
-                            : null,
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.blue)),
-                        child: const Text("4",
-                            style: TextStyle(color: Colors.white)),
-                      ),
-                      TextButton(
-                        onPressed: _deviceStatus == Device.connected
-                            ? () async {
-                                await _bluetoothClassicPlugin.write("5");
-                              }
-                            : null,
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.blue)),
-                        child: const Text("5",
-                            style: TextStyle(color: Colors.white)),
-                      ),
+                      Text(_currentDevice),
+                      const Text(":"),
+                      Text(_deviceStatusStr)
                     ],
-                  )
-                ],
-              )
-            ],
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                const Text("料盒", style: TextStyle(fontSize: 20.0)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _deviceStatus == Device.connected
+                          ? () async {
+                              await _bluetoothClassicPlugin.write("l");
+                            }
+                          : null,
+                      child: const Text("向左"),
+                    ),
+                    ElevatedButton(
+                      onPressed: _deviceStatus == Device.connected
+                          ? () async {
+                              await _bluetoothClassicPlugin.write("r");
+                            }
+                          : null,
+                      child: const Text("向右"),
+                    ),
+                    ElevatedButton(
+                      onPressed: _deviceStatus == Device.connected
+                          ? () async {
+                              await _bluetoothClassicPlugin.write("d");
+                            }
+                          : null,
+                      child: const Text("饲料均匀"),
+                    ),
+                  ],
+                ),
+                
+                const SizedBox(height: 16.0),
+                const Text("喂食量", style: TextStyle(fontSize: 20.0)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: List.generate(5, (index) {
+                    return ElevatedButton(
+                      onPressed: _deviceStatus == Device.connected
+                          ? () async {
+                              await _bluetoothClassicPlugin
+                                  .write("${index + 1}");
+                            }
+                          : null,
+                      child: Text("${index + 1}"),
+                    );
+                  }),
+                ),
+                const SizedBox(height: 16.0),
+                const Text("鱼缸控制", style: TextStyle(fontSize: 20.0)),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: _deviceStatus == Device.connected
+                        ? () async {
+                            await _bluetoothClassicPlugin.write("e");
+                          }
+                        : null,
+                    child: const Text("喂食"),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
